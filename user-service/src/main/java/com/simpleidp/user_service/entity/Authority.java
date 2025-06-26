@@ -1,28 +1,25 @@
 package com.simpleidp.user_service.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="authorities")
+@Table(schema = "auth", name = "authority")
 public class Authority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    private String name;
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name="customer_id", nullable = false)
-    private Customer customer;
+    @JoinColumn(name = "user_id", nullable = false)
+    private Users users;
 
-
+    @ManyToOne
+    @JoinColumn(name = "client_role_id", nullable = false)
+    private ClientRole clientRole;
 }

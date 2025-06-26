@@ -1,7 +1,7 @@
 package com.simpleidp.identity_auth_server.config;
 
-import com.simpleidp.identity_auth_server.entity.Customer;
-import com.simpleidp.identity_auth_server.repository.CustomerRepository;
+import com.simpleidp.identity_auth_server.entity.Users;
+import com.simpleidp.identity_auth_server.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,15 +18,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SimpleIDPUserDetailsService implements UserDetailsService {
 
-    private final CustomerRepository customerRepository;
+    private final UsersRepository usersRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Customer customer = customerRepository.findByEmail(username).orElseThrow(() -> new
+        Users user = usersRepository.findByEmail(username).orElseThrow(() -> new
                 UsernameNotFoundException("User details not found for the user: " + username));
-        List<GrantedAuthority> authorities = customer.getAuthorities().stream().map(authority -> new
-                SimpleGrantedAuthority(authority.getName())).collect(Collectors.toList());
-        return new User(customer.getEmail(), customer.getPwd(), authorities);
+        List<GrantedAuthority> authorities = user.getAuthorities().stream().map(authority -> new
+                SimpleGrantedAuthority(authority.getClientRole().getName())).collect(Collectors.toList());
+        return new User(user.getEmail(), user.getPassword(), authorities);
     }
 
 }
